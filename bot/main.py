@@ -16,10 +16,18 @@ from database.session import init_db
 logger = logging.getLogger(__name__)
 
 
+def _normalize_proxy_url(url: str) -> str:
+    # python_socks (aiogram) понимает socks5://, но не socks5h://
+    if url.startswith("socks5h://"):
+        return "socks5://" + url[len("socks5h://") :]
+    return url
+
+
 def create_bot() -> Bot:
     if settings.telegram_proxy:
+        proxy = _normalize_proxy_url(settings.telegram_proxy)
         logger.info("Telegram API: подключение через прокси")
-        session = AiohttpSession(proxy=settings.telegram_proxy)
+        session = AiohttpSession(proxy=proxy)
         return Bot(token=settings.bot_token, session=session)
     return Bot(token=settings.bot_token)
 
