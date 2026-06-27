@@ -85,9 +85,8 @@ def after_add_item_keyboard() -> InlineKeyboardMarkup:
         inline_keyboard=[
             [
                 InlineKeyboardButton(text="➕ Добавить ещё", callback_data="wardrobe:add"),
-                InlineKeyboardButton(text="✨ Сгенерировать наряд", callback_data="outfit:regenerate"),
+                InlineKeyboardButton(text="👗 Мой гардероб", callback_data="wardrobe:list"),
             ],
-            [InlineKeyboardButton(text="👗 Мой гардероб", callback_data="wardrobe:list")],
         ]
     )
 
