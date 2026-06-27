@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Optional
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -7,6 +8,9 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
     bot_token: str
+
+    # Прокси только для Telegram API (нужен на Yandex Cloud и др., где api.telegram.org недоступен)
+    telegram_proxy: Optional[str] = None
 
     # Yandex Cloud — Alice AI LLM (OpenAI-совместимый API)
     yandex_api_key: str

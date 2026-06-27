@@ -2,6 +2,7 @@ import asyncio
 import logging
 
 from aiogram import Bot, Dispatcher
+from aiogram.client.session.aiohttp import AiohttpSession
 from aiogram.fsm.storage.memory import MemoryStorage
 
 from bot.handlers import callbacks, cancel, chat, checklist, favorites, outfit, profile, start, wardrobe
@@ -13,6 +14,14 @@ from config import settings
 from database.session import init_db
 
 logger = logging.getLogger(__name__)
+
+
+def create_bot() -> Bot:
+    if settings.telegram_proxy:
+        logger.info("Telegram API: подключение через прокси")
+        session = AiohttpSession(proxy=settings.telegram_proxy)
+        return Bot(token=settings.bot_token, session=session)
+    return Bot(token=settings.bot_token)
 
 
 async def main() -> None:
@@ -27,7 +36,7 @@ async def main() -> None:
     loop = asyncio.get_running_loop()
     loop.run_in_executor(None, init_rembg_session)
 
-    bot = Bot(token=settings.bot_token)
+    bot = create_bot()
     dp = Dispatcher(storage=MemoryStorage())
 
     dp.message.middleware(DbSessionMiddleware())
